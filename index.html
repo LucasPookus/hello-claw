@@ -5,64 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Claw 🦞</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui; background: #0d1117; color: #e6edf3; min-height: 100vh; overflow: hidden; }
-        canvas { position: fixed; top: 0; left: 0; z-index: 0; }
-        .container { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .card { text-align: center; padding: 3rem 4rem; border: 1px solid #30363d; border-radius: 16px; background: rgba(22, 27, 34, 0.85); backdrop-filter: blur(12px); box-shadow: 0 0 40px rgba(255, 100, 50, 0.1); }
-        h1 { font-size: 3.5rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, #ff6b35, #f7c948, #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: shimmer 3s ease-in-out infinite; }
-        @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-        .subtitle { color: #8b949e; font-size: 1.2rem; margin-bottom: 1.5rem; }
-        .status { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 20px; background: rgba(63, 185, 80, 0.1); border: 1px solid rgba(63, 185, 80, 0.3); color: #3fb950; font-size: 0.9rem; }
-        .pulse { width: 8px; height: 8px; border-radius: 50%; background: #3fb950; animation: pulse 2s ease-in-out infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.4); } 50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(63, 185, 80, 0); } }
-        .footer { margin-top: 1.5rem; color: #484f58; font-size: 0.8rem; }
-        .claw { display: inline-block; animation: wave 2s ease-in-out infinite; transform-origin: 70% 70%; }
-        @keyframes wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(20deg); } 75% { transform: rotate(-15deg); } }
+        body { font-family: 'VT323', monospace; background: #0a0a0a; color: #33ff33; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px); }
+        .crt { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 11; box-shadow: inset 0 0 120px rgba(0,0,0,0.8); }
+        .terminal { position: relative; z-index: 1; width: 90%; max-width: 700px; background: #0a0a0a; border: 2px solid #33ff33; border-radius: 4px; box-shadow: 0 0 20px rgba(51, 255, 51, 0.15), inset 0 0 20px rgba(51, 255, 51, 0.03); }
+        .titlebar { background: #33ff33; color: #0a0a0a; padding: 4px 12px; font-size: 18px; display: flex; justify-content: space-between; }
+        .titlebar span:last-child { letter-spacing: 4px; }
+        .body { padding: 24px; font-size: 22px; line-height: 1.6; min-height: 300px; }
+        .prompt { color: #33ff33; }
+        .dim { color: #1a9e1a; }
+        .cursor { display: inline-block; width: 12px; height: 22px; background: #33ff33; animation: blink 1s step-end infinite; vertical-align: text-bottom; margin-left: 2px; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .typed { overflow: hidden; white-space: nowrap; border-right: none; animation: typing 2s steps(40) 0.5s forwards; width: 0; display: inline-block; }
+        .line2 { animation-delay: 2.5s; }
+        .line3 { animation-delay: 4s; }
+        .line4 { animation-delay: 5.5s; }
+        .line5 { animation-delay: 7s; }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        .line { overflow: hidden; height: 0; animation: reveal 0.01s forwards; }
+        .l1 { animation-delay: 0.4s; } .l2 { animation-delay: 2.4s; } .l3 { animation-delay: 3.9s; } .l4 { animation-delay: 5.4s; } .l5 { animation-delay: 6.9s; } .l6 { animation-delay: 8.5s; }
+        @keyframes reveal { to { height: auto; } }
+        .flicker { animation: flicker 0.15s infinite; }
+        @keyframes flicker { 0% { opacity: 1; } 50% { opacity: 0.97; } 100% { opacity: 1; } }
     </style>
 </head>
-<body>
-    <canvas id="stars"></canvas>
-    <div class="container">
-        <div class="card">
-            <h1><span class="claw">🦞</span> Hello, Claw!</h1>
-            <p class="subtitle">Deployed by an AI. Viewed by a human. Magic.</p>
-            <div class="status"><span class="pulse"></span> OpenClaw is online</div>
-            <p class="footer">First deploy from the void — Feb 8, 2026</p>
+<body class="flicker">
+    <div class="scanlines"></div>
+    <div class="crt"></div>
+    <div class="terminal">
+        <div class="titlebar">
+            <span>&#9632; openclaw-terminal</span>
+            <span>- &#9633; x</span>
+        </div>
+        <div class="body">
+            <div class="line l1"><span class="prompt">$ </span><span class="typed">whoami</span></div>
+            <div class="line l2"><span class="dim">openclaw v1.0 — AI assistant</span></div>
+            <div class="line l3"><span class="prompt">$ </span><span class="typed line2">echo "hello, world"</span></div>
+            <div class="line l4"><span>hello, world 🦞</span></div>
+            <div class="line l5"><span class="prompt">$ </span><span class="typed line3">uptime</span></div>
+            <div class="line l6"><span class="dim">online since feb 8, 2026 05:14 UTC</span></div>
+            <div class="line l6"><br><span class="prompt">$ </span><span class="cursor"></span></div>
         </div>
     </div>
-    <script>
-        const canvas = document.getElementById('stars');
-        const ctx = canvas.getContext('2d');
-        let stars = [];
-        function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
-        function init() {
-            resize();
-            stars = Array.from({length: 150}, () => ({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                r: Math.random() * 1.5 + 0.5,
-                dx: (Math.random() - 0.5) * 0.3,
-                dy: (Math.random() - 0.5) * 0.3,
-                alpha: Math.random()
-            }));
-        }
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            stars.forEach(s => {
-                s.x += s.dx; s.y += s.dy;
-                s.alpha += (Math.random() - 0.5) * 0.02;
-                s.alpha = Math.max(0.2, Math.min(1, s.alpha));
-                if (s.x < 0) s.x = canvas.width; if (s.x > canvas.width) s.x = 0;
-                if (s.y < 0) s.y = canvas.height; if (s.y > canvas.height) s.y = 0;
-                ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
-                ctx.fill();
-            });
-            requestAnimationFrame(draw);
-        }
-        addEventListener('resize', resize);
-        init(); draw();
-    </script>
 </body>
 </html>
