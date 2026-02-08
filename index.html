@@ -100,6 +100,7 @@
         <div class="menu-item" data-app="notepad"><span>📝</span> Notepad</div>
         <div class="menu-item" data-app="weather"><span>🌤️</span> Weather</div>
         <div class="menu-item" data-app="stocks"><span>📈</span> Stocks</div>
+        <div class="menu-item" data-app="minesweeper"><span>💣</span> Minesweeper</div>
         <div class="menu-item" data-app="terminal"><span>💻</span> Terminal</div>
         <div class="menu-divider"></div>
         <div class="menu-item" data-app="about"><span>🦞</span> About ClawOS</div>
@@ -125,6 +126,7 @@ import CalculatorApp from './apps/calculator.js';
 import NotepadApp from './apps/notepad.js';
 import WeatherApp from './apps/weather.js';
 import StocksApp from './apps/stocks.js';
+import MinesweeperApp from './apps/minesweeper.js';
 
 const desktop = document.getElementById('desktop');
 const taskbarItems = document.getElementById('taskbar-items');
@@ -145,6 +147,7 @@ const appRegistry = {
     notepad: { name: 'Notepad', icon: '📝', width: 500, height: 400, module: NotepadApp },
     weather: { name: 'Weather', icon: '🌤️', width: 420, height: 440, module: WeatherApp },
     stocks: { name: 'Stocks', icon: '📈', width: 600, height: 480, module: StocksApp },
+    minesweeper: { name: 'Minesweeper', icon: '💣', width: 500, height: 550, module: MinesweeperApp },
     terminal: { name: 'Terminal', icon: '💻', width: 700, height: 450, module: null },
     about: { name: 'About ClawOS', icon: '🦞', width: 400, height: 300, module: null },
 };
@@ -156,6 +159,7 @@ const iconPositions = [
     { app: 'weather', x: 20, y: 220 },
     { app: 'stocks', x: 20, y: 320 },
     { app: 'terminal', x: 20, y: 420 },
+    { app: 'minesweeper', x: 20, y: 520 },
 ];
 
 function createDesktopIcons() {
