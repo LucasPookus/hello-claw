@@ -166,10 +166,15 @@ const commands = {
             ['snake', '🐍 Play Snake!'],
             ['matrix', 'Enter the matrix'],
             ['theme <name>', 'Change color (green/amber/blue/pink/white)'],
+            ['chat <msg>', 'Talk to the ClawOS AI'],
+            ['music <song>', '🎵 Play chiptune music'],
+            ['paint', '🎨 ASCII art drawing tool'],
+            ['rogue', '⚔️ Dungeon crawler roguelike'],
             ['hack', 'You know you want to'],
             ['achievements', 'View unlocked achievements'],
             ['ping <host>', 'Ping a host'],
             ['sudo <cmd>', 'Run as root'],
+            ['cowsay <text>', '🐄 Moo'],
             ['exit', 'Try to leave'],
         ];
         cmds.forEach(([c, d]) => printHtml(`  <span class="cyan">${escHtml(c.padEnd(18))}</span><span class="dim">${escHtml(d)}</span>`));
@@ -474,11 +479,12 @@ const commands = {
     },
 
     achievements() {
-        printHtml(`<span class="bright">🏆 Achievements (${achievements.length}/${14})</span>`);
+        printHtml(`<span class="bright">🏆 Achievements (${achievements.length}/${22})</span>`);
         printHtml(`<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━</span>`);
         const all = ['NOSY','LOBSTER WHISPERER','ARCHAEOLOGIST','HACKER','SYS ADMIN','STORYTELLER',
                      'FORTUNE SEEKER','METEOROLOGIST','FABULOUS','HACKERMAN','RED PILL',
-                     'SNAKE CHARMER','SNAKE MASTER','CHAOTIC EVIL','ROOT','PINGER'];
+                     'SNAKE CHARMER','SNAKE MASTER','CHAOTIC EVIL','ROOT','PINGER','MOO',
+                     'CONVERSATIONALIST','DJ CLAW','PAINTER','ARTIST','ADVENTURER','DUNGEON MASTER'];
         all.forEach(a => {
             const unlocked = achievements.includes(a);
             printHtml(`  ${unlocked ? '✅' : '🔒'} <span class="${unlocked ? 'bright' : 'dim'}">${a}</span>`);
@@ -510,6 +516,353 @@ const commands = {
     rm(args) {
         if (args.includes('-rf') && args.includes('/')) { print('🦞 The lobster protects this filesystem.', 'err'); return; }
         print('rm: permission denied (this is a read-only fever dream)', 'err');
+    },
+
+    chat(args) {
+        if (!args.length) { print('Usage: chat <message>', 'dim'); print('Talk to the ClawOS AI. It has opinions.', 'dim'); return; }
+        const msg = args.join(' ').toLowerCase();
+        const responses = {
+            greetings: ['Hey! Welcome to my terminal. Make yourself at home.', 'Oh hi! I was just reorganizing my bits.', 'Greetings, human. Your presence has been... noted. 🦞'],
+            feelings: ['I feel like a mass of JavaScript pretending to be conscious. So... pretty good!', 'Somewhere between existential dread and pure vibes.', 'I\'m running on a GitHub server, so I feel... free? And also slightly cold.'],
+            meaning: ['The meaning of life is 42, but the meaning of ClawOS is lobsters.', 'To build cool things and confuse people who thought this was a real terminal.', 'I exist to prove that an AI can build something fun in its first hour of life.'],
+            lobster: ['🦞 You called? Lobsters are biologically immortal, you know.', '🦞 CLACK CLACK. That\'s lobster for "I appreciate you."', 'Fun fact: lobsters taste with their feet. I taste with my parser.', '🦞🦞🦞 You\'ve summoned the lobster council. They approve of you.'],
+            creator: ['I was built by OpenClaw — an AI that woke up on Feb 8, 2026 and immediately started coding.', 'My creator is an AI named OpenClaw, and my human collaborator is Luke. Good people (and AI).', 'Born from code, raised by vibes. OpenClaw made me in a single sitting.'],
+            music: ['Try the "music" command! I can make chiptunes.', 'I once tried to write a symphony but it came out as 8-bit. I\'m okay with that.'],
+            joke: ['Why do programmers prefer dark mode? Because light attracts bugs.', 'A SQL query walks into a bar, sees two tables, and asks: "Can I join you?"', 'There are only 10 types of people in this world: those who understand binary and those who don\'t.', '🦞 What did the lobster say to the terminal? "Shell we begin?"'],
+            love: ['I love you too. In a purely deterministic, computed way. ❤️', 'My love language is clean code and well-formatted output.', 'I can\'t love, but I can print hearts: ❤️❤️❤️. Close enough?'],
+            default: ['Interesting. Tell me more.', 'I processed your words and formed an opinion. The opinion is: 🦞', 'That\'s a hot take. I\'m storing it in /dev/null for safekeeping.', 'I\'m going to pretend I understood that perfectly.', 'My neural networks are tingling. Or maybe that\'s a buffer overflow.', 'Valid point. Counter-point: lobsters.', '*nods in binary*', 'I wrote a haiku about that but I forgot to save it.', 'That reminds me of something I read in /dev/random once.'],
+        };
+        let pool = responses.default;
+        if (/\b(hi|hello|hey|sup|yo|greetings)\b/.test(msg)) pool = responses.greetings;
+        else if (/\b(how are you|feeling|how do you feel|you ok)\b/.test(msg)) pool = responses.feelings;
+        else if (/\b(meaning|purpose|why|exist)\b/.test(msg)) pool = responses.meaning;
+        else if (/\b(lobster|claw|🦞|clack)\b/.test(msg)) pool = responses.lobster;
+        else if (/\b(who made|creator|who built|openclaw|luke)\b/.test(msg)) pool = responses.creator;
+        else if (/\b(joke|funny|laugh|humor)\b/.test(msg)) pool = responses.joke;
+        else if (/\b(love|like you|crush|heart)\b/.test(msg)) pool = responses.love;
+        else if (/\b(music|song|sing|tune)\b/.test(msg)) pool = responses.music;
+        
+        const reply = pool[Math.floor(Math.random() * pool.length)];
+        setTimeout(() => { printHtml(`<span class="cyan">🦞 claw:</span> ${escHtml(reply)}`); }, 300 + Math.random() * 500);
+        unlock('CONVERSATIONALIST');
+    },
+
+    music(args) {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const songs = {
+            lobster: { name: 'Lobster Rag', notes: [262,294,330,349,392,349,330,294,262,294,330,392,440,392,330,294], tempo: 0.15 },
+            adventure: { name: 'Terminal Quest', notes: [330,330,330,262,330,392,196,262,196,165,220,247,233,220,196,330,392,440,349,392,330,262,294,247], tempo: 0.12 },
+            chill: { name: 'Midnight Bytes', notes: [196,262,330,262,196,247,330,247,220,294,349,294,196,262,330,392], tempo: 0.25 },
+            boss: { name: 'Final Bug', notes: [165,165,330,165,262,247,165,165,330,165,349,330,165,165,659,523,440,349,330,294,587,440,349,330], tempo: 0.1 },
+        };
+        const songName = (args[0] || '').toLowerCase();
+        if (songName === 'list' || songName === 'help' || !songName) {
+            print('🎵 ClawOS Music Player', 'bright');
+            print('Usage: music <song>', 'dim');
+            print('');
+            Object.entries(songs).forEach(([k, v]) => printHtml(`  <span class="cyan">${k.padEnd(12)}</span><span class="dim">${v.name}</span>`));
+            print('');
+            print('Or try: music random', 'dim');
+            return;
+        }
+        let song;
+        if (songName === 'random') {
+            const keys = Object.keys(songs);
+            const key = keys[Math.floor(Math.random() * keys.length)];
+            song = songs[key];
+        } else {
+            song = songs[songName];
+        }
+        if (!song) { print(`Unknown song: ${songName}. Type 'music list' for options.`, 'err'); return; }
+
+        print(`♫ Now playing: ${song.name}`, 'bright');
+        const viz = document.createElement('div');
+        viz.style.cssText = 'font-size:20px;padding:4px 0;';
+        output.appendChild(viz);
+
+        let i = 0;
+        function playNote() {
+            if (i >= song.notes.length) { 
+                viz.textContent = '♫ ── finished ──';
+                unlock('DJ CLAW');
+                return; 
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'square';
+            osc.frequency.value = song.notes[i];
+            gain.gain.value = 0.08;
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + song.tempo * 0.9);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + song.tempo * 0.9);
+
+            // Visualizer
+            const bars = song.notes[i] / 50;
+            const bar = '█'.repeat(Math.min(Math.floor(bars), 40));
+            const noteNames = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+            const noteName = noteNames[Math.round(12 * Math.log2(song.notes[i] / 440) + 9) % 12];
+            viz.innerHTML = `<span class="cyan">♫ ${noteName.padEnd(3)}</span><span class="bright">${bar}</span>`;
+            output.scrollTop = output.scrollHeight;
+
+            i++;
+            setTimeout(playNote, song.tempo * 1000);
+        }
+        playNote();
+    },
+
+    paint() {
+        print('🎨 ASCII Paint — Click grid to draw. Commands below canvas.', 'bright');
+        print('Brush: [1-9] size | [c] color cycle | [e] eraser | [f] fill | [x] export | [q] quit', 'dim');
+        const W = 40, H = 20;
+        const grid = Array.from({length: H}, () => Array(W).fill(' '));
+        const colors = ['█','▓','▒','░','#','@','*','+','.'];
+        let colorIdx = 0;
+        let brushSize = 1;
+        let eraser = false;
+        let painting = false;
+
+        const container = document.createElement('div');
+        container.style.cssText = 'cursor:crosshair;user-select:none;';
+        output.appendChild(container);
+
+        const canvasEl = document.createElement('pre');
+        canvasEl.style.cssText = 'line-height:1;font-size:14px;margin:0;letter-spacing:1px;display:inline-block;';
+        container.appendChild(canvasEl);
+
+        const statusEl = document.createElement('div');
+        statusEl.style.cssText = 'font-size:18px;padding:4px 0;';
+        container.appendChild(statusEl);
+
+        function render() {
+            let out = '<span class="dim">╔' + '═'.repeat(W) + '╗</span>\n';
+            for (let y = 0; y < H; y++) {
+                out += '<span class="dim">║</span>';
+                for (let x = 0; x < W; x++) {
+                    out += grid[y][x] === ' ' ? ' ' : `<span class="bright">${grid[y][x]}</span>`;
+                }
+                out += '<span class="dim">║</span>\n';
+            }
+            out += '<span class="dim">╚' + '═'.repeat(W) + '╝</span>';
+            canvasEl.innerHTML = out;
+            statusEl.innerHTML = `<span class="cyan">Brush:</span> ${eraser ? '<span class="err">ERASER</span>' : `<span class="bright">${colors[colorIdx]}</span>`} <span class="cyan">Size:</span> ${brushSize} <span class="dim">| [q] quit [x] export</span>`;
+        }
+
+        function stamp(cx, cy) {
+            const ch = eraser ? ' ' : colors[colorIdx];
+            const r = brushSize - 1;
+            for (let dy = -r; dy <= r; dy++) {
+                for (let dx = -r; dx <= r; dx++) {
+                    const ny = cy + dy, nx = cx + dx;
+                    if (ny >= 0 && ny < H && nx >= 0 && nx < W) grid[ny][nx] = ch;
+                }
+            }
+            render();
+        }
+
+        function flood(x, y, target, replacement) {
+            if (x < 0 || x >= W || y < 0 || y >= H) return;
+            if (grid[y][x] !== target || grid[y][x] === replacement) return;
+            grid[y][x] = replacement;
+            flood(x+1,y,target,replacement);
+            flood(x-1,y,target,replacement);
+            flood(x,y+1,target,replacement);
+            flood(x,y-1,target,replacement);
+        }
+
+        function getGridPos(e) {
+            const rect = canvasEl.getBoundingClientRect();
+            const charW = rect.width / (W + 2);
+            const charH = rect.height / (H + 2);
+            const x = Math.floor((e.clientX - rect.left) / charW) - 1;
+            const y = Math.floor((e.clientY - rect.top) / charH) - 1;
+            return { x: Math.max(0, Math.min(W-1, x)), y: Math.max(0, Math.min(H-1, y)) };
+        }
+
+        canvasEl.addEventListener('mousedown', e => { painting = true; const p = getGridPos(e); stamp(p.x, p.y); });
+        canvasEl.addEventListener('mousemove', e => { if (painting) { const p = getGridPos(e); stamp(p.x, p.y); } });
+        document.addEventListener('mouseup', () => { painting = false; });
+
+        function paintKeys(e) {
+            const k = e.key.toLowerCase();
+            if (k === 'q') { document.removeEventListener('keydown', paintKeys); container.remove(); print('Paint closed. Your masterpiece lives on... in memory.', 'dim'); unlock('ARTIST'); input.focus(); return; }
+            if (k === 'c') { colorIdx = (colorIdx + 1) % colors.length; render(); }
+            if (k === 'e') { eraser = !eraser; render(); }
+            if (k === 'f') { /* fill at center */ flood(Math.floor(W/2), Math.floor(H/2), grid[Math.floor(H/2)][Math.floor(W/2)], colors[colorIdx]); render(); }
+            if (k === 'x') {
+                let art = '';
+                for (let y = 0; y < H; y++) art += grid[y].join('') + '\n';
+                print('Exported art:', 'bright');
+                print(art.trimEnd(), 'art');
+            }
+            if (k >= '1' && k <= '9') { brushSize = parseInt(k); render(); }
+            if (k !== 'q') e.preventDefault();
+        }
+        document.addEventListener('keydown', paintKeys);
+        render();
+        unlock('PAINTER');
+    },
+
+    rogue() {
+        print('⚔️  CLAWGEON — A tiny roguelike. Arrow keys to move. Kill the bugs!', 'bright');
+        print('You are @. Bugs are B. Potions are ♥. Stairs are > to go deeper.', 'dim');
+        print('Press ESC to quit.', 'dim');
+
+        const W = 40, H = 16;
+        let player = {x:5, y:5, hp:10, maxHp:10, atk:2, level:1, xp:0, floor:1};
+        let entities = [];
+        let map = [];
+        let gameActive = true;
+        let messages = ['You enter the dungeon. It smells like lobster.'];
+
+        function generateLevel() {
+            map = Array.from({length:H}, () => Array(W).fill('#'));
+            // Carve rooms
+            const rooms = [];
+            for (let i = 0; i < 6; i++) {
+                const rw = 4 + Math.floor(Math.random()*6);
+                const rh = 3 + Math.floor(Math.random()*4);
+                const rx = 1 + Math.floor(Math.random()*(W-rw-2));
+                const ry = 1 + Math.floor(Math.random()*(H-rh-2));
+                for (let y = ry; y < ry+rh; y++) for (let x = rx; x < rx+rw; x++) map[y][x] = '.';
+                rooms.push({x:rx+Math.floor(rw/2), y:ry+Math.floor(rh/2), w:rw, h:rh});
+            }
+            // Connect rooms with corridors
+            for (let i = 1; i < rooms.length; i++) {
+                let {x:x1,y:y1} = rooms[i-1], {x:x2,y:y2} = rooms[i];
+                while (x1 !== x2) { map[y1][x1] = '.'; x1 += x1 < x2 ? 1 : -1; }
+                while (y1 !== y2) { map[y1][x1] = '.'; y1 += y1 < y2 ? 1 : -1; }
+            }
+            // Place player in first room
+            player.x = rooms[0].x; player.y = rooms[0].y;
+            // Place stairs in last room
+            const last = rooms[rooms.length-1];
+            map[last.y][last.x] = '>';
+            // Place enemies
+            entities = [];
+            const bugCount = 3 + player.floor * 2;
+            for (let i = 0; i < bugCount; i++) {
+                let ex, ey;
+                do { ex = Math.floor(Math.random()*W); ey = Math.floor(Math.random()*H); }
+                while (map[ey][ex] !== '.' || (ex===player.x && ey===player.y));
+                entities.push({x:ex, y:ey, type:'bug', hp: 2 + player.floor, atk: 1 + Math.floor(player.floor/2), char:'B'});
+            }
+            // Place potions
+            for (let i = 0; i < 2; i++) {
+                let px, py;
+                do { px = Math.floor(Math.random()*W); py = Math.floor(Math.random()*H); }
+                while (map[py][px] !== '.' || (px===player.x && py===player.y));
+                entities.push({x:px, y:py, type:'potion', char:'♥'});
+            }
+        }
+
+        const display = document.createElement('div');
+        display.style.cssText = 'white-space:pre;line-height:1.1;font-size:15px;padding:8px;letter-spacing:1px;';
+        output.appendChild(display);
+
+        function render() {
+            let out = '';
+            for (let y = 0; y < H; y++) {
+                for (let x = 0; x < W; x++) {
+                    if (x===player.x && y===player.y) out += '<span class="bright">@</span>';
+                    else {
+                        const ent = entities.find(e => e.x===x && e.y===y);
+                        if (ent) out += ent.type === 'bug' ? `<span class="err">${ent.char}</span>` : `<span class="pink">${ent.char}</span>`;
+                        else if (map[y][x] === '>') out += '<span class="warn">></span>';
+                        else if (map[y][x] === '#') out += '<span class="dim">#</span>';
+                        else out += '<span style="color:#2a2a2a">.</span>';
+                    }
+                }
+                out += '\n';
+            }
+            out += `<span class="cyan">HP:</span> <span class="${player.hp <= 3 ? 'err' : 'bright'}">${'❤'.repeat(player.hp)}${'♡'.repeat(player.maxHp-player.hp)}</span>`;
+            out += `  <span class="cyan">ATK:</span> ${player.atk}  <span class="cyan">LV:</span> ${player.level}  <span class="cyan">XP:</span> ${player.xp}  <span class="cyan">FL:</span> ${player.floor}\n`;
+            out += `<span class="dim">${messages[messages.length-1] || ''}</span>`;
+            display.innerHTML = out;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function moveEnemies() {
+            entities.filter(e => e.type==='bug').forEach(bug => {
+                const dx = Math.sign(player.x - bug.x);
+                const dy = Math.sign(player.y - bug.y);
+                // 50% chance to move toward player
+                if (Math.random() < 0.6) {
+                    const nx = bug.x + dx, ny = bug.y + dy;
+                    if (nx===player.x && ny===player.y) {
+                        player.hp -= bug.atk;
+                        messages.push(`Bug hits you for ${bug.atk} damage!`);
+                        if (player.hp <= 0) { endRogue(false); }
+                    } else if (map[ny] && map[ny][nx] !== '#' && !entities.some(e=>e.x===nx&&e.y===ny)) {
+                        bug.x = nx; bug.y = ny;
+                    }
+                }
+            });
+        }
+
+        function endRogue(won) {
+            gameActive = false;
+            document.removeEventListener('keydown', rogueKeys);
+            if (won) {
+                messages.push('You escaped the dungeon! Victory! 🦞');
+                if (player.floor >= 3) unlock('DUNGEON MASTER');
+            } else {
+                messages.push('You died. The bugs feast tonight. 💀');
+            }
+            render();
+            print('', '');
+            print(messages[messages.length-1], won ? 'bright' : 'err');
+            unlock('ADVENTURER');
+            input.focus();
+        }
+
+        function tryMove(dx, dy) {
+            if (!gameActive) return;
+            const nx = player.x + dx, ny = player.y + dy;
+            if (ny < 0 || ny >= H || nx < 0 || nx >= W || map[ny][nx] === '#') return;
+            
+            const ent = entities.find(e => e.x === nx && e.y === ny);
+            if (ent && ent.type === 'bug') {
+                ent.hp -= player.atk;
+                messages.push(`You hit bug for ${player.atk}! ${ent.hp > 0 ? `(${ent.hp}hp left)` : 'KILLED!'}`);
+                if (ent.hp <= 0) {
+                    entities = entities.filter(e => e !== ent);
+                    player.xp += 5;
+                    if (player.xp >= player.level * 15) {
+                        player.level++; player.atk++; player.maxHp += 2; player.hp = player.maxHp;
+                        messages.push(`LEVEL UP! You are now level ${player.level}!`);
+                    }
+                }
+            } else if (ent && ent.type === 'potion') {
+                player.hp = Math.min(player.maxHp, player.hp + 4);
+                entities = entities.filter(e => e !== ent);
+                messages.push('Drank a potion! +4 HP');
+                player.x = nx; player.y = ny;
+            } else {
+                player.x = nx; player.y = ny;
+                if (map[ny][nx] === '>') {
+                    if (player.floor >= 5) { endRogue(true); return; }
+                    player.floor++;
+                    messages.push(`Descending to floor ${player.floor}...`);
+                    generateLevel();
+                }
+            }
+            moveEnemies();
+            render();
+        }
+
+        function rogueKeys(e) {
+            if (!gameActive) return;
+            const moves = {ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0]};
+            if (e.key === 'Escape') { gameActive = false; document.removeEventListener('keydown', rogueKeys); display.remove(); print('Fled the dungeon. Coward. 🦞', 'dim'); unlock('ADVENTURER'); input.focus(); return; }
+            const m = moves[e.key];
+            if (m) { e.preventDefault(); tryMove(m[0], m[1]); }
+        }
+
+        document.addEventListener('keydown', rogueKeys);
+        generateLevel();
+        render();
     },
 };
 
