@@ -231,7 +231,7 @@ const StocksApp = {
     renderDOM() {
         // Styles
         const style = document.createElement('style');
-        style.textContent = \`
+        style.textContent = `
             .stock-app {
                 font-family: 'VT323', 'Courier New', monospace;
                 background-color: #050505;
@@ -336,7 +336,7 @@ const StocksApp = {
                 padding-bottom: 10px;
             }
             h2, h3 { margin: 0 0 10px 0; font-weight: normal; text-transform: uppercase; border-bottom: 1px solid #33ff33; display: inline-block; }
-        \`;
+        `;
 
         const appDiv = document.createElement('div');
         appDiv.className = 'stock-app';
@@ -521,7 +521,7 @@ const StocksApp = {
             const last = s.history[s.history.length - 2] || s.price;
             const diff = s.price - last;
             const symbol = diff >= 0 ? '▲' : '▼';
-            return \`\${s.symbol}: \${s.price.toFixed(2)} (\${symbol} \${Math.abs(diff).toFixed(2)})\`;
+            return `${s.symbol}: ${s.price.toFixed(2)} (${symbol} ${Math.abs(diff).toFixed(2)})`;
         }).join('   +++   ');
         
         // Only update text content if it changed significantly to avoid jitter, 
@@ -534,10 +534,10 @@ const StocksApp = {
 
         // Update Chart Header
         const selStock = this.state.stocks[this.state.selectedStockIndex];
-        this.chartHeader.innerHTML = \`
-            <h2>\${selStock.name} (\${selStock.symbol})</h2>
-            <div style="font-size: 2rem">\$\${selStock.price.toFixed(2)}</div>
-        \`;
+        this.chartHeader.innerHTML = `
+            <h2>${selStock.name} (${selStock.symbol})</h2>
+            <div style="font-size: 2rem">\$${selStock.price.toFixed(2)}</div>
+        `;
 
         // Update Portfolio
         const holdingsVal = this.state.stocks.reduce((acc, s) => {
@@ -547,15 +547,15 @@ const StocksApp = {
         const diff = totalVal - 10000;
         const diffClass = diff >= 0 ? 'price-up' : 'price-down';
 
-        this.portfolioDiv.innerHTML = \`
+        this.portfolioDiv.innerHTML = `
             <h3>PORTFOLIO</h3>
-            <div>CASH: <span class="price-up">\$\${this.state.cash.toFixed(2)}</span></div>
-            <div>HOLDINGS: \$\${holdingsVal.toFixed(2)}</div>
+            <div>CASH: <span class="price-up">\$${this.state.cash.toFixed(2)}</span></div>
+            <div>HOLDINGS: \$${holdingsVal.toFixed(2)}</div>
             <div style="border-top: 1px solid #33ff33; margin-top: 5px; padding-top: 5px;">
-                TOTAL: <span class="\${diffClass}">\$\${totalVal.toFixed(2)}</span>
+                TOTAL: <span class="${diffClass}">\$${totalVal.toFixed(2)}</span>
             </div>
-            <div>P/L: <span class="\${diffClass}">\${diff >= 0 ? '+' : ''}\${diff.toFixed(2)}</span></div>
-        \`;
+            <div>P/L: <span class="${diffClass}">${diff >= 0 ? '+' : ''}${diff.toFixed(2)}</span></div>
+        `;
 
         // Update Actions
         const canBuy = this.state.cash >= selStock.price;
@@ -565,7 +565,7 @@ const StocksApp = {
         const buyBtn = document.createElement('button');
         buyBtn.className = 'btn';
         buyBtn.style.width = '100%';
-        buyBtn.textContent = \`BUY \${selStock.symbol} (\$\${selStock.price.toFixed(2)})\`;
+        buyBtn.textContent = `BUY ${selStock.symbol} (\$${selStock.price.toFixed(2)})`;
         buyBtn.disabled = !canBuy;
         if (!canBuy) buyBtn.style.opacity = '0.5';
         buyBtn.onclick = () => this.buyStock(this.state.selectedStockIndex);
@@ -573,7 +573,7 @@ const StocksApp = {
         const sellBtn = document.createElement('button');
         sellBtn.className = 'btn';
         sellBtn.style.width = '100%';
-        sellBtn.textContent = \`SELL \${selStock.symbol} (Own: \${this.state.holdings[selStock.symbol]})\`;
+        sellBtn.textContent = `SELL ${selStock.symbol} (Own: ${this.state.holdings[selStock.symbol]})`;
         sellBtn.disabled = !canSell;
         if (!canSell) sellBtn.style.opacity = '0.5';
         sellBtn.onclick = () => this.sellStock(this.state.selectedStockIndex);
@@ -585,20 +585,20 @@ const StocksApp = {
         this.stockListDiv.innerHTML = '';
         this.state.stocks.forEach((s, idx) => {
             const item = document.createElement('div');
-            item.className = \`stock-list-item \${idx === this.state.selectedStockIndex ? 'active' : ''}\`;
+            item.className = `stock-list-item ${idx === this.state.selectedStockIndex ? 'active' : ''}`;
             const last = s.history[s.history.length - 2] || s.price;
             const change = s.price - last;
             const changeClass = change >= 0 ? 'price-up' : 'price-down';
             
-            item.innerHTML = \`
+            item.innerHTML = `
                 <div style="display:flex; justify-content:space-between;">
-                    <span>\${s.symbol}</span>
-                    <span>\${s.price.toFixed(2)}</span>
+                    <span>${s.symbol}</span>
+                    <span>${s.price.toFixed(2)}</span>
                 </div>
-                <div style="font-size: 0.8em; text-align: right;" class="\${changeClass}">
-                    \${change >= 0 ? '+' : ''}\${change.toFixed(2)}
+                <div style="font-size: 0.8em; text-align: right;" class="${changeClass}">
+                    ${change >= 0 ? '+' : ''}${change.toFixed(2)}
                 </div>
-            \`;
+            `;
             item.onclick = () => {
                 this.state.selectedStockIndex = idx;
                 this.updateUI(); // Re-render to update selection highlights

@@ -46,7 +46,7 @@ const WeatherApp = {
   },
 
   injectStyles() {
-    const css = \`
+    const css = `
       .weather-app-container {
         font-family: 'VT323', monospace;
         background-color: #000;
@@ -180,7 +180,7 @@ const WeatherApp = {
         background-size: 100% 2px, 3px 100%;
         z-index: 10;
       }
-    \`;
+    `;
     
     this.styleElement = document.createElement('style');
     this.styleElement.textContent = css;
@@ -232,97 +232,97 @@ const WeatherApp = {
     
     if (type === 'sun') {
       if (f === 0) {
-        return \`
+        return `
       \\   |   /
        \\  |  /
     -- ( o ) --
        /  |  \\
       /   |   \\
-        \`;
+        `;
       } else {
-        return \`
+        return `
        \\  |  /
         \\ | /
     --- ( O ) ---
         / | \\
        /  |  \\
-        \`;
+        `;
       }
     } else if (type === 'rain') {
       if (f === 0) {
-        return \`
+        return `
       .-~~-.
      /      \\
     (        )
      \\-.__.-/
       '  '  '
       '  '  '
-        \`;
+        `;
       } else {
-        return \`
+        return `
       .-~~-.
      /      \\
     (        )
      \\-.__.-/
       '  '  '
         '  '  '
-        \`;
+        `;
       }
     } else if (type === 'snow') {
       if (f === 0) {
-        return \`
+        return `
       .-~~-.
      /      \\
     (        )
      \\-.__.-/
       *  .  *
       .  *  .
-        \`;
+        `;
       } else {
-        return \`
+        return `
       .-~~-.
      /      \\
     (        )
      \\-.__.-/
       .  *  .
       *  .  *
-        \`;
+        `;
       }
     } else if (type === 'storm') {
        if (f === 0) {
-        return \`
+        return `
       .-~~-.
      /      \\
     (        )
      \\-.__.-/
       /  /  /
        /  /
-        \`;
+        `;
       } else {
-        return \`
+        return `
       .-~~-.
      /      \\
     (        )
      \\-.__.-/
          ⚡
        /  /
-        \`;
+        `;
       }   
     } else if (type === 'fog') {
-      return \`
+      return `
     
     ( ( ( ( ) ) ) )
      ( ( ( ( ) ) )
     ( ( ( ( ) ) ) )
-      \`;
+      `;
     }
     
     // Cloud default
-    return \`
+    return `
        .--.
     .-(    ).
    (___.__)__)
-    \`;
+    `;
   },
 
   getMiniIcon(type) {
@@ -359,7 +359,7 @@ const WeatherApp = {
     }
     
     if (tempEl) {
-      tempEl.textContent = \`\${this.state.temp}°F\`;
+      tempEl.textContent = `${this.state.temp}°F`;
     }
   },
 
@@ -368,43 +368,43 @@ const WeatherApp = {
     
     const { location, temp, condition, forecast } = this.state;
     
-    this.container.innerHTML = \`
+    this.container.innerHTML = `
       <div class="weather-app-container">
         <div class="crt-flicker"></div>
         
         <header class="weather-header">
           <div class="location-title">
-            LOCATION: \${location}<span class="cursor">_</span>
+            LOCATION: ${location}<span class="cursor">_</span>
           </div>
           <button class="btn-scan" id="weather-scan-btn">SCAN NETWORK</button>
         </header>
 
         <div class="main-display">
           <div class="ascii-art">
-            \${this.getAsciiArt(condition.type, 0)}
+            ${this.getAsciiArt(condition.type, 0)}
           </div>
           
           <div class="weather-info">
-            <div class="temp-display">\${temp}°F</div>
-            <div class="condition-text">\${condition.name}</div>
+            <div class="temp-display">${temp}°F</div>
+            <div class="condition-text">${condition.name}</div>
             <div style="font-size: 14px; margin-top: 5px; opacity: 0.7;">
-              HUMIDITY: \${Math.floor(Math.random() * 100)}%<br>
-              PING: \${Math.floor(Math.random() * 200)}ms
+              HUMIDITY: ${Math.floor(Math.random() * 100)}%<br>
+              PING: ${Math.floor(Math.random() * 200)}ms
             </div>
           </div>
         </div>
 
         <div class="forecast-strip">
-          \${forecast.map(day => \`
+          ${forecast.map(day => `
             <div class="forecast-day">
-              <div class="day-name">\${day.day}</div>
-              <div class="day-icon" style="font-size: 20px;">\${day.icon}</div>
-              <div class="day-temp">\${day.temp}°</div>
+              <div class="day-name">${day.day}</div>
+              <div class="day-icon" style="font-size: 20px;">${day.icon}</div>
+              <div class="day-temp">${day.temp}°</div>
             </div>
-          \`).join('')}
+          `).join('')}
         </div>
       </div>
-    \`;
+    `;
 
     // Bind event
     const btn = this.container.querySelector('#weather-scan-btn');
