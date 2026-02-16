@@ -1,6 +1,7 @@
-export default class MinesweeperApp {
-  constructor() {
-    this.container = null;
+
+const MinesweeperApp = {
+  init(container) {
+    this.container = container;
     this.rows = 16;
     this.cols = 16;
     this.totalMines = 40;
@@ -15,21 +16,18 @@ export default class MinesweeperApp {
     this.handleCellClick = this.handleCellClick.bind(this);
     this.handleRightClick = this.handleRightClick.bind(this);
     this.restart = this.restart.bind(this);
-  }
 
-  init(container) {
-    this.container = container;
     this.injectStyles();
     this.renderLayout();
     this.startNewGame();
-  }
+  },
 
   destroy() {
     this.stopTimer();
     if (this.container) {
       this.container.innerHTML = '';
     }
-  }
+  },
 
   injectStyles() {
     if (document.getElementById('minesweeper-styles')) return;
@@ -127,7 +125,7 @@ export default class MinesweeperApp {
       .c8 { color: #ff0000; }
     `;
     this.container.appendChild(style);
-  }
+  },
 
   renderLayout() {
     this.container.innerHTML = '';
@@ -166,7 +164,7 @@ export default class MinesweeperApp {
     wrapper.appendChild(header);
     wrapper.appendChild(this.gridEl);
     this.container.appendChild(wrapper);
-  }
+  },
 
   startNewGame() {
     this.stopTimer();
@@ -187,7 +185,7 @@ export default class MinesweeperApp {
     })));
 
     this.renderGrid();
-  }
+  },
 
   placeMines(safeRow, safeCol) {
     let minesPlaced = 0;
@@ -221,7 +219,7 @@ export default class MinesweeperApp {
         }
       }
     }
-  }
+  },
 
   renderGrid() {
     this.gridEl.innerHTML = '';
@@ -253,7 +251,7 @@ export default class MinesweeperApp {
         this.gridEl.appendChild(cell);
       }
     }
-  }
+  },
 
   handleCellClick(r, c) {
     if (this.gameState !== 'playing' || this.grid[r][c].flagged || this.grid[r][c].revealed) return;
@@ -275,7 +273,7 @@ export default class MinesweeperApp {
       this.checkWin();
       this.renderGrid(); // Full re-render for simplicity
     }
-  }
+  },
 
   handleRightClick(r, c) {
     if (this.gameState !== 'playing' || this.grid[r][c].revealed) return;
@@ -286,7 +284,7 @@ export default class MinesweeperApp {
     
     this.updateMineCounter();
     this.renderGrid();
-  }
+  },
 
   revealCell(r, c) {
     if (r < 0 || r >= this.rows || c < 0 || c >= this.cols || this.grid[r][c].revealed || this.grid[r][c].flagged) return;
@@ -301,7 +299,7 @@ export default class MinesweeperApp {
         }
       }
     }
-  }
+  },
 
   checkWin() {
     let unrevealedSafeCells = 0;
@@ -316,7 +314,7 @@ export default class MinesweeperApp {
     if (unrevealedSafeCells === 0) {
       this.gameOver(true);
     }
-  }
+  },
 
   gameOver(won) {
     this.gameState = won ? 'won' : 'lost';
@@ -332,7 +330,7 @@ export default class MinesweeperApp {
       }
     }
     this.renderGrid();
-  }
+  },
 
   startTimer() {
     this.stopTimer();
@@ -340,25 +338,27 @@ export default class MinesweeperApp {
       this.timeElapsed++;
       this.updateTimerDisplay();
     }, 1000);
-  }
+  },
 
   stopTimer() {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
       this.timerInterval = null;
     }
-  }
+  },
 
   updateTimerDisplay() {
     this.timerEl.textContent = Math.min(999, this.timeElapsed).toString().padStart(3, '0');
-  }
+  },
 
   updateMineCounter() {
     const remaining = this.totalMines - this.flagsPlaced;
     this.mineCounterEl.textContent = remaining.toString().padStart(3, '0');
-  }
+  },
 
   restart() {
     this.startNewGame();
   }
-}
+};
+
+export default MinesweeperApp;
