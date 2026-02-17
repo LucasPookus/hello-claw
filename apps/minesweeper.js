@@ -91,8 +91,8 @@ const MinesweeperApp = {
       .ms-cell {
         width: 25px;
         height: 25px;
-        background-color: #000;
-        border: 1px solid #004400;
+        background-color: #001100;
+        border: 1px solid #00ff00;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -104,8 +104,8 @@ const MinesweeperApp = {
         border-color: #0f0;
       }
       .ms-cell.revealed {
-        background-color: #050505;
-        border: 1px solid #001100;
+        background-color: #001100;
+        border: 1px solid #003300;
       }
       .ms-cell.mine {
         background-color: #f00;
