@@ -49,7 +49,7 @@ let username = 'guest';
 let history = [];
 let histIdx = -1;
 let hackerMode = false;
-let theme = 'green';
+let theme = 'red';
 let visitCount = parseInt(localStorage.getItem('clawos_visits') || '0') + 1;
 localStorage.setItem('clawos_visits', visitCount);
 let achievements = JSON.parse(localStorage.getItem('clawos_achievements') || '[]');
@@ -79,6 +79,7 @@ const fs = {
 };
 
 const themes = {
+    red: { main: '#ff3333', dim: '#990000', bg: '#0a0000' },
     green: { main: '#33ff33', dim: '#1a9e1a', bg: '#0a0a0a' },
     amber: { main: '#ffaa00', dim: '#996600', bg: '#0a0a00' },
     blue: { main: '#00aaff', dim: '#005580', bg: '#000a0f' },

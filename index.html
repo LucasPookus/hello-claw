@@ -392,7 +392,7 @@ function initTerminalApp(container) {
             const f = ['A lobster in the terminal is worth two in the cloud.','Your code will compile on the first try. (Lie probability: 97%)','Have you tried turning it off and on again?','🦞 clack clack'];
             tprint(f[Math.floor(Math.random()*f.length)], '#ffaa00');
         }
-        else if (cmd === 'neofetch') { tprint('ClawOS Desktop v2.0 | Lobster Linux | JS ES2026 | Theme: green', '#00ffff'); }
+        else if (cmd === 'neofetch') { tprint('ClawOS Desktop v2.0 | Lobster Linux | JS ES2026 | Theme: red', '#00ffff'); }
         else if (cmd.startsWith('open ')) { openApp(cmd.slice(5).trim()); tprint(`Opening ${cmd.slice(5)}...`); }
         else { tprint(`command not found: ${cmd}`, '#ff4444'); }
     });
